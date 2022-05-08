@@ -8,6 +8,7 @@ export default {
   data() {
     return {
       allSurah: ref([]),
+      search: "",
     };
   },
 
@@ -18,6 +19,14 @@ export default {
 
   mounted() {
     this.getAllSurah();
+  },
+
+  computed: {
+    filterSurah: function () {
+      return this.allSurah.filter((allSurah) => {
+        return allSurah.name_simple.toLowerCase().split("-").join(" ").match(this.search);
+      });
+    },
   },
 
   methods: {
@@ -43,7 +52,8 @@ export default {
         <div>
           <img src="../assets/al-quran.png" width="250" alt="logo" />
         </div>
-        <div class="my-5">
+        <div class="mt-5">
+          <input class="form-control form-control-lg mb-5 font-italic" type="text" v-model="search" placeholder="Hellow brother what do you want to read?" />
           <p>Mostly people search</p>
         </div>
         <div class="col">
@@ -77,7 +87,7 @@ export default {
       </div>
       <div class="surahs-overview-section__surahs-container mt-5">
         <div class="row">
-          <div v-for="surah in allSurah" :key="surah.id" class="col-md-4 my-3">
+          <div v-for="(surah, index) in filterSurah" :key="index" class="col-md-4 my-3">
             <router-link
               class="a"
               :to="{ name: 'surah', params: { id: surah.id } }"
